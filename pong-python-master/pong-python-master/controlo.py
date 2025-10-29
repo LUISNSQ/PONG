@@ -24,7 +24,7 @@ class ControloVisao:
         #frame_mirror = frame[:, ::-1, :]
         frame = cv2.flip(frame, 1) # espelha a imagem
 
-        # Converter para HSV
+        #countours
         hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
         baixo_red1 = np.array([0, 120, 70])
@@ -36,7 +36,6 @@ class ControloVisao:
         red2 = cv2.inRange(hsv, baixo_red2, cima_red2)
         red = red1 + red2
 
-        # Encontrar contornos
         contours, _ = cv2.findContours(red, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         cx = None
 
