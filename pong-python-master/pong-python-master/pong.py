@@ -19,7 +19,7 @@ ball_x, ball_y = 50, 50
 ball_change_x, ball_change_y = 5, 5
 score = 0
 
-# Iniciar visão
+# CV
 cv = ControloVisao()
 
 done = False

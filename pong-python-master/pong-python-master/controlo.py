@@ -24,13 +24,13 @@ class ControloVisao:
         #frame_mirror = frame[:, ::-1, :]
         frame = cv2.flip(frame, 1) # espelha a imagem
 
-
+        # Converter para HSV
         hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
-        cima_red1 = np.array([0, 120, 70])
-        baixo_red1 = np.array([10, 255, 255])
-        cima_red2 = np.array([170, 120, 70])
-        baixo_red2 = np.array([180, 255, 255])
+        baixo_red1 = np.array([0, 120, 70])
+        cima_red1 = np.array([10, 255, 255])
+        baixo_red2 = np.array([170, 120, 70])
+        cima_red2 = np.array([180, 255, 255])
 
         red1 = cv2.inRange(hsv, baixo_red1, cima_red1)
         red2 = cv2.inRange(hsv, baixo_red2, cima_red2)
@@ -39,14 +39,18 @@ class ControloVisao:
         # Encontrar contornos
         contours, _ = cv2.findContours(red, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         cx = None
+
         if contours:
             c = max(contours, key=cv2.contourArea)
             area = cv2.contourArea(c)
             if area > 800:
                 (x, y, w, h) = cv2.boundingRect(c)
                 cx = x + w // 2
+                cy = y + h // 2
+
+              #  cv2.drawContours(frame, [c], -1, (0, 255, 0), 2)
                 cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-                cv2.circle(frame, (cx, y + h // 2), 5, (255, 0, 0), -1)
+                cv2.circle(frame, (cx, cy), 5, (255, 0, 0), -1)
 
         #Threshold
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -61,7 +65,7 @@ class ControloVisao:
         cv2.imshow("Camera", frame)
         cv2.waitKey(1)
 
-        # Posição da Barra
+        # Posição normalizada (0–1)
         if cx is not None:
             width = frame.shape[1]
             return cx / width
