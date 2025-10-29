@@ -1,13 +1,13 @@
 import cv2
 import numpy as np
 
-class VisionControl:
-    def __init__(self, camera_index=0):
-        self.cap = cv2.VideoCapture(camera_index)
+class ControloVisao:
+    def __init__(self):
+        self.cap = cv2.VideoCapture(0)
         if not self.cap.isOpened():
-            raise Exception("Não foi possível abrir a câmara.")
+            raise Exception("Erro ao abrir a câmara.")
 
-    def get_position(self):
+    def detetor(self):
         ret, frame = self.cap.read()
         if not ret:
             return None
