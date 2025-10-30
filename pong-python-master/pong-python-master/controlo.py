@@ -40,31 +40,33 @@ class ControloVisao:
         cx = None
 
         if contours:
-            c = max(contours, key=cv2.contourArea)
+            c = max(contours, key=cv2.contourArea)  # verifica qual é o maior contour
             area = cv2.contourArea(c)
+
             if area > 800:
-                (x, y, w, h) = cv2.boundingRect(c)
-                cx = x + w // 2
-                cy = y + h // 2
+                cv2.drawContours(frame, contours =[c], contourIdx = -1, color =(0, 255, 0),thickness= 1)
 
-              #  cv2.drawContours(frame, [c], -1, (0, 255, 0), 2)
-                cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-                cv2.circle(frame, (cx, cy), 5, (255, 0, 0), -1)
+                m = cv2.moments(c)
+                if m["m00"] != 0:
+                    cX = int(m["m10"] / m["m00"])
+                    cY = int(m["m01"] / m["m00"])
+                    cx = cX
 
+                    cv2.circle(img = frame, center = (cX, cY),radius = 5, color =(255, 0, 0), thickness =-1)
         #Threshold
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         gray = gray / 255.0
 
-        _, image_thresholded = cv2.threshold(gray,
+        _, image_threshold = cv2.threshold(gray,
                                              self.threshold_value,
                                              1.0,
                                              cv2.THRESH_BINARY)
-        cv2.imshow("Threshold", image_thresholded)
+        cv2.imshow("Threshold", image_threshold)
 
         cv2.imshow("Camera", frame)
         cv2.waitKey(1)
 
-        # Posição normalizada (0–1)
+        # Posição da Barra
         if cx is not None:
             width = frame.shape[1]
             return cx / width
